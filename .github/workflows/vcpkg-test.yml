@@ -1,0 +1,43 @@
+name: vcpkg test
+on:
+  workflow_dispatch
+
+jobs:
+  first_job:
+    runs-on: ubuntu-latest
+    container: ubuntu:22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Checkout vcpkg
+        uses: actions/checkout@main
+        with: 
+          repository: 'microsoft/vcpkg'
+          ref: 'master'
+          path: 'vcpkg'
+      - name: install Vcpkg
+        run: |
+          apt update
+          apt install -y build-essential tar curl zip unzip ninja-build cmake git bison pkg-config
+          cd vcpkg
+          ./bootstrap-vcpkg.sh --useSystemBinaries
+          ./vcpkg install pyheif
+#      - name: Checkout folly
+#        uses: actions/checkout@main
+#        with: 
+#          repository: 'facebook/folly'
+#          ref: 'v2020.09.07.00'
+#          path: 'folly'
+#      - name: install folly
+#        run: |
+#          cd folly/build
+#          cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake
+#          ls -lh ../../vcpkg/*
+
+#      - name: Checkout folly
+#        uses: actions/checkout@main
+#        with: 
+#          repository: 'carsales/pyheif'
+#          ref: 'v2020.09.07.00'
+#          path: 'pyheif'
+
